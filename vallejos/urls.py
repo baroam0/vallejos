@@ -19,10 +19,13 @@ from django.contrib import admin
 from django.urls import path
 
 from .views import home
-from apps.materiales.views import materialeslistado
+from apps.materiales.views import marcacomercialeditar, \
+    materialeslistado, marcacomerciallistado
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home),
-    path('materialeslistado/', materialeslistado)
+    path('materialeslistado/', materialeslistado),
+    path('marcacomerciallistado/', marcacomerciallistado),
+    path('marcacomercialeditar/<int:pk>', marcacomercialeditar)
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
