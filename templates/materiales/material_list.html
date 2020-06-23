@@ -14,6 +14,10 @@
                 <fieldset>
                     <input type="text" id="txtBuscar" name="txtBuscar" placeholder="Buscar Item" />
                     <button type="submit" class="pure-button pure-button-primary">Buscar</button>
+
+                    &nbsp;&nbsp;&nbsp;
+
+                    <button type="button" class="pure-button pure-button" onclick="IrNuevoMaterial()">Nuevo</button>
                 </fieldset>
             </form>  
 
@@ -49,7 +53,7 @@
                                 <img src={{resultado.codigo_barra_imagen.url}} width="50%" height="50%">
                             </td>
                             <td>
-                                <a href="https://www.w3schools.com/">Editar</a></p>
+                                <a href="/materialeditar/{{resultado.pk}} ">Editar</a></p>
                             </td>
                         </tr>
                     {% endfor %}
@@ -60,4 +64,15 @@
     </div>
      
         
+{% endblock %}
+
+
+{% block customjs %}
+
+    <script>
+        function IrNuevoMaterial() {
+            window.location.replace("/materialnuevo");
+        }
+    </script>
+
 {% endblock %}

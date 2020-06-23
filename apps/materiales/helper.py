@@ -1,11 +1,11 @@
 
-
 from io import BytesIO
 from random import randint
 from barcode import EAN13
 from barcode.writer import ImageWriter
 
 from .models import Material
+
 
 def validarcodigo(parametro):
     try:

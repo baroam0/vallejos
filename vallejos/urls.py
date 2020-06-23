@@ -20,12 +20,17 @@ from django.urls import path
 
 from .views import home
 from apps.materiales.views import marcacomercialeditar, \
-    materialeslistado, marcacomerciallistado
+    materialeslistado, materialnuevo, materialeditar, \
+    marcacomerciallistado, marcacomercialnueva
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home),
     path('materialeslistado/', materialeslistado),
+    path('materialnuevo/', materialnuevo),
+    path('materialeditar/<int:pk>', materialeditar),
     path('marcacomerciallistado/', marcacomerciallistado),
+    path('marcacomercialnueva/', marcacomercialnueva),
     path('marcacomercialeditar/<int:pk>', marcacomercialeditar)
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

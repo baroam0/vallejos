@@ -16,7 +16,7 @@
                     <button type="submit" class="pure-button pure-button-primary">Buscar</button>
                     &nbsp;
                     &nbsp;
-                    <button type="submit" class="pure-button pure-button">Nuevo</button>
+                    <button type="button" class="pure-button pure-button" onclick="IrNuevaMarcaComercial()">Nuevo</button>
                 </fieldset>
             </form>  
 
@@ -54,4 +54,15 @@
     </div>
      
         
+{% endblock %}
+
+
+{% block customjs %}
+
+    <script>
+        function IrNuevaMarcaComercial() {
+            window.location.replace("/marcacomercialnueva");
+        }
+    </script>
+
 {% endblock %}
