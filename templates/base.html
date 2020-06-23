@@ -3,11 +3,29 @@
 <!DOCTYPE html>
 <html>
   <head>
-
+    <link rel="stylesheet" href="{% static 'css/pure-min.css'%}">
   </head>
+
+  <div class="pure-menu pure-menu-horizontal">
+    <ul class="pure-menu-list">
+        <!--li class="pure-menu-item pure-menu-selected">
+            <a href="#" class="pure-menu-link">Home</a>
+        </li-->
+        <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+            <a href="#" id="menuLink1" class="pure-menu-link">Material</a>
+            <ul class="pure-menu-children">
+                <li class="pure-menu-item">
+                    <a href="/materialeslistado" class="pure-menu-link">Buscar</a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+  </div>
+
   <body>
     {% block content %}
     {% endblock %}
   </body>
+
 
 </html>
