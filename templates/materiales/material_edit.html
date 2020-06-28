@@ -9,6 +9,19 @@
                 Busqueda de Marcas Comerciales
             </h3>
 
+
+            {% if form.errors %}
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <strong>{{ error|escape }}</strong>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                    <strong>{{ error|escape }}</strong>
+                {% endfor %}
+            {% endif %}
+
+
             <form class="pure-form pure-form-aligned" method="POST">{% csrf_token %}
                 <fieldset>
                     <div class="pure-control-group">
