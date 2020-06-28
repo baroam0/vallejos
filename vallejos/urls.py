@@ -34,3 +34,4 @@ urlpatterns = [
     path('marcacomercialnueva/', marcacomercialnueva),
     path('marcacomercialeditar/<int:pk>', marcacomercialeditar)
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
