@@ -14,19 +14,19 @@
                     <div class="pure-control-group">
                         <label for="aligned-name">Material</label>
                         {{form.material}}
-                        <span class="pure-form-message-inline">Este dato es requerido.</span>
+                        <span class="pure-form-message-inline">(*)Este dato es requerido.</span>
                     </div>
 
                     <div class="pure-control-group">
                         <label for="aligned-name">Unidad</label>
                         {{form.unidad}}
-                        <span class="pure-form-message-inline">Este dato es requerido.</span>
+                        <span class="pure-form-message-inline">(*)Este dato es requerido.</span>
                     </div>
 
                     <div class="pure-control-group">
                         <label for="aligned-name">Cantidad</label>
                         {{form.cantidad}}
-                        <span class="pure-form-message-inline">Este dato es requerido.</span>
+                        <span class="pure-form-message-inline">(*)Este dato es requerido.</span>
                     </div>
 
                     <div class="pure-controls">
@@ -43,6 +43,11 @@
     {% block customjs %}
 
         <script>
+
+            $(document).ready(function () {
+                $("#id_material").select2();
+            });
+            
             function IrListadoMaterial() {
                 window.location.replace("/materialeslistado");
             }
