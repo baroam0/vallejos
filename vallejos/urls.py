@@ -23,6 +23,7 @@ from apps.materiales.views import marcacomercialeditar, \
     materialeslistado, materialnuevo, materialeditar, \
     marcacomerciallistado, marcacomercialnueva
 
+from apps.stocks.views import stocklistado, stocknuevo, stockeditar
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -32,6 +33,9 @@ urlpatterns = [
     path('materialeditar/<int:pk>', materialeditar),
     path('marcacomerciallistado/', marcacomerciallistado),
     path('marcacomercialnueva/', marcacomercialnueva),
-    path('marcacomercialeditar/<int:pk>', marcacomercialeditar)
+    path('marcacomercialeditar/<int:pk>', marcacomercialeditar),
+    path('stocklistado/', stocklistado),
+    path('stocknuevo/', stocknuevo),
+    path('stockeditar/<int:pk>', stockeditar),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
