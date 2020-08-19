@@ -21,6 +21,8 @@ class Material(models.Model):
     codigo_barra = models.CharField(max_length=20, unique=True)
     codigo_barra_imagen = models.ImageField(upload_to='materiales',
         blank=True)
+    precio = models.DecimalField(decimal_places=2, max_digits=10,
+        null=True, blank=True)
 
     def __str__(self):
         return self.descripcion + " - " + str(self.marca_comercial)

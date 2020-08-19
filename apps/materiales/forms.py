@@ -11,10 +11,11 @@ class MaterialForm(forms.ModelForm):
         label="Descripcion",
         required=True
         )
+    precio = forms.DecimalField(label="Precio", required=True)
 
     class Meta:
         model = Material
-        fields = ['descripcion', 'marca_comercial']
+        fields = ['descripcion', 'marca_comercial', 'precio']
 
 
 class MarcaComercialForm(forms.ModelForm):

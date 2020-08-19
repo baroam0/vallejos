@@ -37,6 +37,7 @@
                     <tr>
                         <th>Descripcion</th>
                         <th>Marca Comercial</th>
+                        <th>Precio</th>
                         <th align="center">Codigo Barra</th>
                         <th>Editar</th>
                     </tr>
@@ -47,6 +48,7 @@
                         <tr>
                             <td>{{resultado.descripcion.upper }}</td>
                             <td>{{resultado.marca_comercial}}</td>
+                            <td> $ {{resultado.precio}}</td>
                             <td style="vertical-align:middle; text-align:center;">
                                 <img src={{resultado.codigo_barra_imagen.url}} width="50%" height="50%">
                             </td>
