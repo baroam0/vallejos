@@ -1,3 +1,4 @@
 
 /vallejos/settings.py
 *.pyc 
+*.sqlite3
