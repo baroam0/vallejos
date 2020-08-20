@@ -7,7 +7,7 @@
         <div class="pure-u-1-5"></div>
         <div class="pure-u-3-5">
             <h3>
-                Busqueda de Materiales
+                Busqueda de Operaciones
             </h3>
 
             <form class="pure-form">
@@ -17,7 +17,7 @@
 
                     &nbsp;&nbsp;&nbsp;
 
-                    <button type="button" class="pure-button pure-button" onclick="IrNuevoMaterial()">Nuevo</button>
+                    <button type="button" class="pure-button pure-button" onclick="IrStockNuevo()">Nuevo</button>
                 </fieldset>
             </form>  
 
@@ -35,25 +35,22 @@
             <table class="pure-table pure-table-striped ">
                 <thead>
                     <tr>
-                        <th>Descripcion</th>
-                        <th>Marca Comercial</th>
-                        <th>Precio</th>
-                        <th align="center">Codigo Barra</th>
+                        <th>Fecha</th>
+                        <th>Cliente</th>
+                        <th>Total</th>
                         <th>Editar</th>
                     </tr>
 
                 </thead>
                 <tbody>
+                    
                     {% for resultado in resultados %}
                         <tr>
-                            <td>{{resultado.descripcion.upper }}</td>
-                            <td>{{resultado.marca_comercial}}</td>
-                            <td> $ {{resultado.precio}}</td>
-                            <td style="vertical-align:middle; text-align:center;">
-                                <img src={{resultado.codigo_barra_imagen.url}} width="50%" height="50%">
-                            </td>
+                            <td>{{resultado.fecha }}</td>
+                            <td>{{resultado.cliente.upper }}</td>
+                            <td>{{resultado.total }}</td>
                             <td>
-                                <a href="/materialeditar/{{resultado.pk}} ">Editar</a></p>
+                                <a href="/stockeditar/{{resultado.pk}} ">Editar</a></p>
                             </td>
                         </tr>
                     {% endfor %}
@@ -70,8 +67,8 @@
 {% block customjs %}
 
     <script>
-        function IrNuevoMaterial() {
-            window.location.replace("/materialnuevo");
+        function IrStockNuevo() {
+            window.location.replace("/stocknuevo");
         }
     </script>
 
