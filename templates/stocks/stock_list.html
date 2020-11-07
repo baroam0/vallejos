@@ -37,6 +37,7 @@
                     <tr>
                         <th>Descripcion</th>
                         <th>Cantidad</th>
+                        <th>Unidad</th>
                         <th>Editar</th>
                     </tr>
 
@@ -45,8 +46,9 @@
                     
                     {% for resultado in resultados %}
                         <tr>
-                            <td>{{resultado.material.upper }}</td>
+                            <td>{{resultado.material }}</td>
                             <td>{{resultado.cantidad}}</td>
+                            <td>{{resultado.unidad}}</td>
                             <td>
                                 <a href="/stockeditar/{{resultado.pk}} ">Editar</a></p>
                             </td>
