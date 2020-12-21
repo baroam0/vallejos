@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="pure-g">
+        <div class="pure-u-1-3"></div>
+        <div class="pure-u-1-3">
+            <h3>
+                Nueva Operacion
+            </h3>
+
+            <input type="number" id="txtCantidad" placeholder="Cantidad">
+
+            <input type="text" id="txtMaterial" placeholder="Material" onkeypress="BuscaMaterial(event)" >
+
+            <form class="pure-form pure-form-aligned">
+
+                <table class="pure-table pure-table-striped ">
+                    <thead>
+                        <tr>
+                            <th>Descripcion</th>
+                            <th>Marca Comercial</th>
+                            <th>Precio</th>
+                            <th align="center">Codigo Barra</th>
+                            <th>Editar</th>
+                        </tr>
+    
+                    </thead>
+                    <tbody>
+                        {% for resultado in resultados %}
+                            <tr>
+                                <td>{{resultado.descripcion.upper }}</td>
+                                <td>{{resultado.marca_comercial}}</td>
+                                <td> $ {{resultado.precio}}</td>
+                                <td style="vertical-align:middle; text-align:center;">
+                                    <img src={{resultado.codigo_barra_imagen.url}} width="50%" height="50%">
+                                </td>
+                                <td>
+                                    <a href="/materialeditar/{{resultado.pk}} ">Editar</a></p>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+
+                <fieldset>
+                    <div class="pure-controls">
+                        <button type="submit" class="pure-button pure-button-primary">Aceptar</button>
+                        &nbsp; &nbsp; &nbsp;
+                        <button type="button" class="pure-button" onclick="IrListadoMaterial()">Cancelar</button>
+                    </div>
+                </fieldset>                
+            </form>
+        </div>
+        <div class="pure-u-1-3"></div>
+    </div>
+
+    {% block customjs %}
+
+        <script>
+
+            $(document).ready(function () {
+                $("#id_material").select2();
+            });
+            
+            function IrListadoMaterial() {
+                window.location.replace("/materialeslistado");
+            }
+
+            function BuscaMaterial(e){
+                var codigo = $("#txtMaterial").val();
+                if(e.keyCode === 13){
+                    e.preventDefault(); // Ensure it is only this code that runs
+
+                    var data = new Object();
+
+                    $.ajax({
+                        type: "GET",
+                        url: "/ajaxmaterial/",
+                        data: {
+                            "codigo": codigo
+                        }, 
+                        success: function (data) {
+                            console.log(data.precio);
+                        }
+                    });
+                }
+            }
+            
+        </script>
+
+    {% endblock %}
+
+{% endblock %}
