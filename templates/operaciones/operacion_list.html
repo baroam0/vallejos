@@ -4,8 +4,13 @@
 {% block content %}
 
     <div class="pure-g">
+<<<<<<< HEAD
         <div class="pure-u-1-3"></div>
         <div class="pure-u-1-3">
+=======
+        <div class="pure-u-1-5"></div>
+        <div class="pure-u-3-5">
+>>>>>>> 01535ddc6a6a45457e8953af93623cf4a3ddabfd
             <h3>
                 Busqueda de Operaciones
             </h3>
@@ -17,12 +22,20 @@
 
                     &nbsp;&nbsp;&nbsp;
 
+<<<<<<< HEAD
                     <button type="button" class="pure-button pure-button" onclick="IrOperacionNuevo()">Nuevo</button>
+=======
+                    <button type="button" class="pure-button pure-button" onclick="IrStockNuevo()">Nuevo</button>
+>>>>>>> 01535ddc6a6a45457e8953af93623cf4a3ddabfd
                 </fieldset>
             </form>  
 
         </div>
+<<<<<<< HEAD
         <div class="pure-u-1-3"></div>
+=======
+        <div class="pure-u-1-5"></div>
+>>>>>>> 01535ddc6a6a45457e8953af93623cf4a3ddabfd
     </div>
 
     <br>
@@ -35,9 +48,15 @@
             <table class="pure-table pure-table-striped ">
                 <thead>
                     <tr>
+
                         <th>Descripcion</th>
                         <th>Cantidad</th>
                         <th>Unidad</th>
+
+                        <th>Fecha</th>
+                        <th>Cliente</th>
+                        <th>Total</th>
+
                         <th>Editar</th>
                     </tr>
 
@@ -46,9 +65,9 @@
                     
                     {% for resultado in resultados %}
                         <tr>
-                            <td>{{resultado.material }}</td>
-                            <td>{{resultado.cantidad}}</td>
-                            <td>{{resultado.unidad}}</td>
+                            <td>{{resultado.fecha }}</td>
+                            <td>{{resultado.cliente.upper }}</td>
+                            <td>{{resultado.total }}</td>
                             <td>
                                 <a href="/stockeditar/{{resultado.pk}} ">Editar</a></p>
                             </td>
@@ -67,8 +86,13 @@
 {% block customjs %}
 
     <script>
+<<<<<<< HEAD
         function IrOperacionNuevo() {
             window.location.replace("/operacionnueva");
+=======
+        function IrStockNuevo() {
+            window.location.replace("/stocknuevo");
+>>>>>>> 01535ddc6a6a45457e8953af93623cf4a3ddabfd
         }
     </script>
 
