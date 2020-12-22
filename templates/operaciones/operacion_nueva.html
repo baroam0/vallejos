@@ -9,37 +9,24 @@
                 Nueva Operacion
             </h3>
 
-            <input type="number" id="txtCantidad" placeholder="Cantidad">
+            <input type="number" id="txtCantidad" name="txtCantidad" placeholder="Cantidad">
 
             <input type="text" id="txtMaterial" placeholder="Material" onkeypress="BuscaMaterial(event)" >
 
             <form class="pure-form pure-form-aligned">
 
-                <table class="pure-table pure-table-striped ">
+                <table class="pure-table pure-table-striped" id="tablaOperacion" name="tablaOperacion" >
                     <thead>
                         <tr>
                             <th>Descripcion</th>
                             <th>Marca Comercial</th>
+                            <th>Cantidad</th>
                             <th>Precio</th>
-                            <th align="center">Codigo Barra</th>
-                            <th>Editar</th>
+                            <th>SubTotal</th>
+                            <th>Quitar</th>
                         </tr>
-    
                     </thead>
                     <tbody>
-                        {% for resultado in resultados %}
-                            <tr>
-                                <td>{{resultado.descripcion.upper }}</td>
-                                <td>{{resultado.marca_comercial}}</td>
-                                <td> $ {{resultado.precio}}</td>
-                                <td style="vertical-align:middle; text-align:center;">
-                                    <img src={{resultado.codigo_barra_imagen.url}} width="50%" height="50%">
-                                </td>
-                                <td>
-                                    <a href="/materialeditar/{{resultado.pk}} ">Editar</a></p>
-                                </td>
-                            </tr>
-                        {% endfor %}
                     </tbody>
                 </table>
 
@@ -70,6 +57,13 @@
 
             function BuscaMaterial(e){
                 var codigo = $("#txtMaterial").val();
+                var cantidad = $("#txtCantidad").val();
+                //var cantidad = document.getElementById("txtCantidad").value;
+
+                if(cantidad == ""){
+                    cantidad = 1;
+                }
+
                 if(e.keyCode === 13){
                     e.preventDefault(); // Ensure it is only this code that runs
 
@@ -79,13 +73,37 @@
                         type: "GET",
                         url: "/ajaxmaterial/",
                         data: {
-                            "codigo": codigo
+                            "codigo": codigo,
+                            "cantidad": cantidad
                         }, 
                         success: function (data) {
-                            console.log(data.precio);
+                            //console.log(data.precio);
+                            //AgregarElementoTabla(data);
+                            window.location = "/operacioneditar/" + data.pk;
                         }
                     });
                 }
+            }
+
+            function AgregarElementoTabla(data){
+                
+
+                var subtotal = cantidad * data.precio;
+   
+                var contenidofila = "<tr id=" + data.pk + "><td>" + data.material + "</td>";
+                contenidofila = contenidofila + "<td>" + data.marcacomercial + "</td>";
+                contenidofila = contenidofila + "<td>" + cantidad + "</td>";
+                contenidofila = contenidofila + "<td>" + data.precio + "</td>";
+                contenidofila = contenidofila + "<td>" + subtotal.toFixed(2) + "</td>";
+                contenidofila = contenidofila + "<td><button id='bt" + data.pk + "type='button' onclick='QuitarFila("+ data.pk +")'>Quitar</button></td></tr>"; 
+                $("#tablaOperacion tbody").append(contenidofila);
+
+            }
+
+            function QuitarFila(){
+                button.addEventListener('click', function() {
+                    alert("QQQ");
+                }, false);
             }
             
         </script>

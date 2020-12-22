@@ -1,6 +1,7 @@
 
+from datetime import datetime
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 
 from .models import Operacion, DetalleOperacion
@@ -30,16 +31,35 @@ def operacionnueva(request):
 
 
 def operacioneditar(request, pk):
-    return render(request, 'operaciones/operacion_nueva.html')
+    resultados = DetalleOperacion.objects.filter(operacion=pk)
+    return render(
+        request,
+        'operaciones/operacion_edit.html',
+        {
+            "resultados": resultados
+        })
 
 
 def ajaxconsultamaterial(request):
     codigobarra = request.GET.get("codigo")
+    cantidad = request.GET.get("cantidad")
+    
     material = Material.objects.get(codigo_barra=codigobarra)
+    subtotal = float(cantidad) * float(material.precio)
+    operacion = Operacion.objects.create(fecha=datetime.now())
+    operacion.save()
+    operacion = Operacion.objects.latest("pk")
+    detalleoperacion = DetalleOperacion.objects.create(
+        operacion = operacion,
+        material = material,
+        cantidad = cantidad,
+        precio = subtotal,
+    )
+
+    detalleoperacion.save
 
     response = {
-        'material': material.descripcion,
-        'precio': material.precio
+        'pk': operacion.pk,
     }
     return JsonResponse(response)
 

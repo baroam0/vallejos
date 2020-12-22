@@ -23,7 +23,8 @@ from apps.materiales.views import marcacomercialeditar, \
     materialeslistado, materialnuevo, materialeditar, \
     marcacomerciallistado, marcacomercialnueva
 
-from apps.operaciones.views import operacionlistado, operacionnueva, ajaxconsultamaterial
+from apps.operaciones.views import operacionlistado, \
+    operacionnueva, operacioneditar, ajaxconsultamaterial
 
 from apps.stocks.views import stocklistado, stocknuevo, stockeditar
 
@@ -38,6 +39,7 @@ urlpatterns = [
     path('marcacomercialeditar/<int:pk>', marcacomercialeditar),
     path('operacionlistado/', operacionlistado),
     path('operacionnueva/', operacionnueva),
+    path('operacioneditar/<int:pk>', operacioneditar),
     path('stocklistado/', stocklistado),
     path('stocknuevo/', stocknuevo),
     path('stockeditar/<int:pk>', stockeditar),

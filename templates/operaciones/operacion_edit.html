@@ -9,26 +9,43 @@
                 Nueva Operacion
             </h3>
 
+            <input type="number" id="txtCantidad" name="txtCantidad" placeholder="Cantidad">
+
+            <input type="text" id="txtMaterial" placeholder="Material" onkeypress="BuscaMaterial(event)">
+
             <form class="pure-form pure-form-aligned">
+
+                <table class="pure-table pure-table-striped" id="tablaOperacion" name="tablaOperacion" >
+                    <thead>
+                        <tr>
+                            <th>Descripcion</th>
+                            <th>Marca Comercial</th>
+                            <th>Cantidad</th>
+                            <th>Precio</th>
+                            <th>SubTotal</th>
+                            <th>Quitar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for resultado in resultados %}
+                            <tr>
+                                <td>{{resultado.material}}</td>
+                                <td>{{resultado.material.marca_comercial}}</td>
+                                <td>{{resultado.cantidad}}</td>
+                                <td>{{resultado.material.precio}}</td>
+                                <td>{{resultado.precio}}</td>
+                                <td>
+                                    <button type="button" id={{resultado.pk}} onclick="AA()">
+                                        Quitar
+                                    </button>
+                                </td>        
+                            </tr>
+                        {% endfor %}
+                        
+                    </tbody>
+                </table>
+
                 <fieldset>
-                    <div class="pure-control-group">
-                        <label for="aligned-name">Material</label>
-                        {{form.material}}
-                        <span class="pure-form-message-inline">(*)Este dato es requerido.</span>
-                    </div>
-
-                    <div class="pure-control-group">
-                        <label for="aligned-name">Unidad</label>
-                        {{form.unidad}}
-                        <span class="pure-form-message-inline">(*)Este dato es requerido.</span>
-                    </div>
-
-                    <div class="pure-control-group">
-                        <label for="aligned-name">Cantidad</label>
-                        {{form.cantidad}}
-                        <span class="pure-form-message-inline">(*)Este dato es requerido.</span>
-                    </div>
-
                     <div class="pure-controls">
                         <button type="submit" class="pure-button pure-button-primary">Aceptar</button>
                         &nbsp; &nbsp; &nbsp;
@@ -46,11 +63,57 @@
 
             $(document).ready(function () {
                 $("#id_material").select2();
+
+                var t = document.getElementById(1);
+
+                console.log(t);
             });
+
+            function AA(){
+                alert("QQQQ")
+            }
+
+            
             
             function IrListadoMaterial() {
                 window.location.replace("/materialeslistado");
             }
+
+            function BuscaMaterial(e){
+                var codigo = $("#txtMaterial").val();
+                var cantidad = $("#txtCantidad").val();
+                //var cantidad = document.getElementById("txtCantidad").value;
+
+                if(cantidad == ""){
+                    cantidad = 1;
+                }
+
+                if(e.keyCode === 13){
+                    e.preventDefault(); // Ensure it is only this code that runs
+
+                    var data = new Object();
+
+                    $.ajax({
+                        type: "GET",
+                        url: "/ajaxmaterial/",
+                        data: {
+                            "codigo": codigo,
+                            "cantidad": cantidad
+                        }, 
+                        success: function (data) {
+                            //console.log(data.precio);
+                            //AgregarElementoTabla(data);
+                            window.location = "/operacioneditar/" + data.pk;
+                        }
+                    });
+                }
+            }
+
+            function Quitar(){
+                alert("juju");
+            }
+            
+            
         </script>
 
     {% endblock %}
