@@ -45,10 +45,6 @@ urlpatterns = [
     path('stocklistado/', stocklistado),
     path('stocknuevo/', stocknuevo),
     path('stockeditar/<int:pk>', stockeditar),
-<<<<<<< HEAD
-    path('ajaxmaterial/', ajaxconsultamaterial),
-=======
     path('operacionlistado/', operacionlistado),
->>>>>>> 01535ddc6a6a45457e8953af93623cf4a3ddabfd
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
