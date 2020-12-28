@@ -1,27 +1,23 @@
 
 
 from django import forms
-from .models import MarcaComercial, Material
+from .models import Material
 
 
 class MaterialForm(forms.ModelForm):
     descripcion = forms.CharField(label="Descripcion", required=True)
-    marca_comercial = forms.ModelChoiceField(
-        queryset=MarcaComercial.objects.all(),
-        label="Descripcion",
-        required=True
-        )
+    codigo_barra = forms.CharField(label="Codigo Barra", required=True)
     precio = forms.DecimalField(label="Precio", required=True)
 
     class Meta:
         model = Material
-        fields = ['descripcion', 'marca_comercial', 'precio']
+        fields = ['descripcion', 'codigo_barra', 'precio']
 
 
-class MarcaComercialForm(forms.ModelForm):
+class MaterialSinCodigo(forms.ModelForm):
     descripcion = forms.CharField(label="Descripcion", required=True)
+    precio = forms.DecimalField(label="Precio", required=True)
 
     class Meta:
-        model = MarcaComercial
-        fields = ['descripcion']
-
+        model = Material
+        fields = ['descripcion', 'precio']

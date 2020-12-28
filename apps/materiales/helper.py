@@ -1,7 +1,7 @@
 
 from io import BytesIO
 from random import randint
-from barcode import EAN13
+from barcode import EAN13, UPCA
 from barcode.writer import ImageWriter
 
 from .models import Material
@@ -22,4 +22,9 @@ def gcb():
     rv = BytesIO()
     EAN13(str(cod), writer=ImageWriter()).write(rv)
     return cod, rv
-    
+
+
+def generacodigo(cod):
+    rv = BytesIO()
+    UPCA(str(cod), writer=ImageWriter()).write(rv)
+    return rv

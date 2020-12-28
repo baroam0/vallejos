@@ -2,7 +2,7 @@
 from django import forms 
 
 from apps.complementos_generales.models import Unidad
-from apps.materiales.models import Material, MarcaComercial
+from apps.materiales.models import Material
 from .models import Stock
 
 

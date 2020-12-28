@@ -7,7 +7,7 @@
         <div class="pure-u-1-5"></div>
         <div class="pure-u-3-5">
             <h3>
-                Busqueda de Materiales
+                Busqueda de Mercaderias
             </h3>
 
             <form class="pure-form">
@@ -17,7 +17,11 @@
 
                     &nbsp;&nbsp;&nbsp;
 
-                    <button type="button" class="pure-button pure-button" onclick="IrNuevoMaterial()">Nuevo</button>
+                    <button type="button" class="pure-button pure-button" onclick="IrNuevoMaterial()">Nueva Mercaderia</button>
+
+                    &nbsp;&nbsp;&nbsp;
+                    
+                    <button type="button" class="pure-button pure-button" onclick="IrNuevoMaterialSinCodigo()">Nuevo Mercaderia Sin Cod de Barra </button>
                 </fieldset>
             </form>  
 
@@ -30,28 +34,31 @@
     <br>
 
     <div class="pure-g">
-        <div class="pure-u-1-24"></div>
-        <div class="pure-u-22-24">
+        <div class="pure-u-3-24"></div>
+        <div class="pure-u-18-24">
             <table class="pure-table pure-table-striped ">
                 <thead>
                     <tr>
                         <th>Descripcion</th>
-                        <th>Marca Comercial</th>
                         <th>Precio</th>
                         <th align="center">Codigo Barra</th>
                         <th>Editar</th>
                     </tr>
-
                 </thead>
                 <tbody>
                     {% for resultado in resultados %}
                         <tr>
                             <td>{{resultado.descripcion.upper }}</td>
-                            <td>{{resultado.marca_comercial}}</td>
                             <td> $ {{resultado.precio}}</td>
-                            <td style="vertical-align:middle; text-align:center;">
-                                <img src={{resultado.codigo_barra_imagen.url}} width="50%" height="50%">
-                            </td>
+                            {% if resultado.codigo_barra_imagen %}
+                                <td style="vertical-align:middle; text-align:center;">
+                                    <img src={{resultado.codigo_barra_imagen.url}} width="50%" height="50%">
+                                </td>
+                            {% else %}
+                                <td>
+                                    &nbsp;
+                                </td>
+                            {% endif %}
                             <td>
                                 <a href="/materialeditar/{{resultado.pk}} ">Editar</a></p>
                             </td>
@@ -60,19 +67,26 @@
                 </tbody>
             </table>
         </div>
-        <div class="pure-u-1-24"></div>
+        <div class="pure-u-3-24"></div>
     </div>
-     
         
 {% endblock %}
-
 
 {% block customjs %}
 
     <script>
+        $( document ).ready(function() {
+            $("#txtBuscar").focus();
+        });
+
         function IrNuevoMaterial() {
             window.location.replace("/materialnuevo");
+        }
+
+        function IrNuevoMaterialSinCodigo(){
+            window.location.replace("/materialnuevosincodigo");
         }
     </script>
 
 {% endblock %}
+

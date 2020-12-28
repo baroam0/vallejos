@@ -36,7 +36,6 @@
                 <thead>
                     <tr>
                         <th>Descripcion</th>
-                        <th>Marca Comercial</th>
                         <th>Cantidad</th>
                         <th>Unidad</th>
                         <th>Editar</th>
@@ -48,7 +47,6 @@
                     {% for resultado in resultados %}
                         <tr>
                             <td>{{resultado.material.descripcion.upper }}</td>
-                            <td>{{resultado.material.marca_comercial.descripcion.upper }}</td>
                             <td>{{resultado.cantidad}}</td>
                             <td>{{resultado.unidad}}</td>
                             <td>
@@ -69,6 +67,11 @@
 {% block customjs %}
 
     <script>
+
+        $( document ).ready(function() {
+            $("#txtBuscar").focus();
+        });
+
         function IrStockNuevo() {
             window.location.replace("/stocknuevo");
         }

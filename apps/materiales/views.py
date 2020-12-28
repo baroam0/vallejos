@@ -8,10 +8,10 @@ from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from django.shortcuts import render
 
-from .forms import MarcaComercialForm, MaterialForm
-from .models import Material, MarcaComercial
+from .forms import MaterialForm, MaterialSinCodigo
+from .models import Material
 
-from apps.materiales.helper import gcb
+from apps.materiales.helper import gcb, generacodigo
 
 
 def materialeslistado(request):
@@ -19,7 +19,7 @@ def materialeslistado(request):
         parametro = request.GET.get('txtBuscar')
         consulta = Material.objects.filter(
             Q(descripcion__icontains=parametro) |
-            Q(marca_comercial__descripcion__icontains=parametro)
+            Q(codigo_barra__icontains=parametro)
         ).order_by('descripcion')
     else:
         consulta = Material.objects.all().order_by('descripcion')
@@ -37,10 +37,30 @@ def materialnuevo(request):
         form = MaterialForm(request.POST)
         if form.is_valid():
             form.save()
+            consulta = Material.objects.latest("pk")
+            consulta.codigo_barra_imagen = generacodigo(consulta.codigo_barra)
+            file_name = str(consulta.codigo_barra) + ".jpeg"
+            imagen = File(consulta.codigo_barra_imagen, name=file_name)
+            consulta.codigo_barra_imagen = imagen
+            consulta.save()
+
+            messages.success(request, "SE HA GRABADO EL MATERIAL")
+            return redirect('/materialeslistado')
+        else:
+            return render(request, 'materiales/material_edit.html', {"form": form})
+    else:
+        form = MaterialForm()
+        return render(request, 'materiales/material_edit.html', {"form": form})
+
+
+def materialnuevosincodigo(request):
+    if request.POST:
+        form = MaterialSinCodigo(request.POST)
+        if form.is_valid():
+            form.save()
             cod, imagen = gcb()
             file_name = str(cod) + ".jpeg"
             imagen = File(imagen, name=file_name)
-
             consulta = Material.objects.latest("pk")
             consulta.codigo_barra = cod
             consulta.codigo_barra_imagen = imagen
@@ -51,7 +71,7 @@ def materialnuevo(request):
         else:
             return render(request, 'materiales/material_edit.html', {"form": form})
     else:
-        form = MaterialForm()
+        form = MaterialSinCodigo()
         return render(request, 'materiales/material_edit.html', {"form": form})
 
 

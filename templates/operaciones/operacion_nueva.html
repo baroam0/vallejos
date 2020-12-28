@@ -3,8 +3,8 @@
 {% block content %}
 
     <div class="pure-g">
-        <div class="pure-u-1-3"></div>
-        <div class="pure-u-1-3">
+        <div class="pure-u-1-5"></div>
+        <div class="pure-u-3-5">
             <h3>
                 Nueva Operacion
             </h3>
@@ -19,7 +19,6 @@
                     <thead>
                         <tr>
                             <th>Descripcion</th>
-                            <th>Marca Comercial</th>
                             <th>Cantidad</th>
                             <th>Precio</th>
                             <th>SubTotal</th>
@@ -33,35 +32,54 @@
 
                 <fieldset>
                     <div class="pure-controls">
-                        <button type="submit" class="pure-button pure-button-primary">Aceptar</button>
+                        <button type="button" class="pure-button pure-button-primary" onclick="Guardar()">Aceptar</button>
                         &nbsp; &nbsp; &nbsp;
-                        <button type="button" class="pure-button" onclick="IrListadoMaterial()">Cancelar</button>
+                        <button type="button" class="pure-button" onclick="IrListadoOperacion()">Cancelar</button>
                     </div>
                 </fieldset>                
             </form>
         </div>
-        <div class="pure-u-1-3"></div>
+        <div class="pure-u-1-5"></div>
     </div>
 
     {% block customjs %}
 
         <script>
 
+            var coleccion = [];
+
             $(document).ready(function () {
-                $("#id_material").select2();
+                $("#txtMaterial").focus();
             });
             
-            function IrListadoMaterial() {
+            function IrListadoOperacion() {
                 window.location.replace("/materialeslistado");
             }
 
+            function QuitarFila(id){
+                var fila = document.getElementById(id);
+                $("#" + fila.id + "").remove();
+            }
+
+            function AgregarFilaTabla(dato){
+                contenido = "<tr id='" + dato.pk +  "'>";
+                contenido = contenido + "<td>"+ dato.descripcion +"</td>";
+                contenido = contenido + "<td>" + dato.cantidad + "</td>";
+                contenido = contenido + "<td>" + dato.precio + "</td>";
+                contenido = contenido + "<td>" + dato.subtotal + "</td>";
+                contenido = contenido + "<td><button type='button' onclick='QuitarFila(" + dato.pk + ")'>Quitar</button></td>"
+                contenido = contenido + "</tr>";
+                $("#tablaOperacion tbody").append(contenido);
+                $("#txtCantidad").val("");
+                $("#txtMaterial").val("");
+            }
+
             function BuscaMaterial(e){
-                var codigo = $("#txtMaterial").val();
                 var cantidad = $("#txtCantidad").val();
-                //var cantidad = document.getElementById("txtCantidad").value;
+                var codigo = $("#txtMaterial").val();
 
                 if(cantidad == ""){
-                    cantidad = 1;
+                    cantidad = 1
                 }
 
                 if(e.keyCode === 13){
@@ -77,33 +95,54 @@
                             "cantidad": cantidad
                         }, 
                         success: function (data) {
-                            //console.log(data.precio);
-                            //AgregarElementoTabla(data);
-                            window.location = "/operacioneditar/" + data.pk;
+                            if(data.status==200){
+                                AgregarFilaTabla(data);
+                            }else{
+                                alert("No se encuentra la mercaderia solicitada");
+                            }
                         }
                     });
                 }
-            }
-
-            function AgregarElementoTabla(data){
-                
-
-                var subtotal = cantidad * data.precio;
-   
-                var contenidofila = "<tr id=" + data.pk + "><td>" + data.material + "</td>";
-                contenidofila = contenidofila + "<td>" + data.marcacomercial + "</td>";
-                contenidofila = contenidofila + "<td>" + cantidad + "</td>";
-                contenidofila = contenidofila + "<td>" + data.precio + "</td>";
-                contenidofila = contenidofila + "<td>" + subtotal.toFixed(2) + "</td>";
-                contenidofila = contenidofila + "<td><button id='bt" + data.pk + "type='button' onclick='QuitarFila("+ data.pk +")'>Quitar</button></td></tr>"; 
-                $("#tablaOperacion tbody").append(contenidofila);
 
             }
 
-            function QuitarFila(){
-                button.addEventListener('click', function() {
-                    alert("QQQ");
-                }, false);
+            function Guardar(){
+                var fila=[];
+                var cantidad = 0;
+                var tabla = document.getElementById('tablaOperacion');
+                var rowLength = tabla.rows.length;
+
+                for(var i=1; i<rowLength; i+=1){
+                    var row = tabla.rows[i];
+                    var cellLength = row.cells.length;
+                    for(var y=0; y<cellLength; y+=1){
+                        var cell = row.cells[y];
+
+                        if(y==1){
+                            cantidad=cell.innerHTML;
+                            
+                            fila={
+                                "material":row.id,
+                                "cantidad": cantidad
+                            }
+                            coleccion.push(fila);
+                        }
+                        fila = [];
+                    }
+                }
+
+                $.ajax({
+                    type: "GET",
+                    url: "/ajaxguardaroperacion/",
+                    data: JSON.stringify(coleccion), 
+                    contentType: "application/json",
+                    dataType: "json",
+                    success: function (data) {
+                        alert(data);
+                    }
+                });
+
+                coleccion = [];
             }
             
         </script>

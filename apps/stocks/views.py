@@ -1,4 +1,5 @@
 
+from django.db.models import Q
 from django.contrib import messages
 from django.core.files import File
 from django.core.paginator import Paginator
@@ -14,9 +15,12 @@ from .models import Stock
 def stocklistado(request):
     if 'txtBuscar' in request.GET:
         parametro = request.GET.get('txtBuscar')
+
         consulta = Stock.objects.filter(
-            material__icontains=parametro
+            Q(material__codigo_barra=parametro) |
+            Q(material__descripcion__icontains=parametro)
         ).order_by('material')
+
     else:
         consulta = Stock.objects.all().order_by('material')
     paginador = Paginator(consulta, 25)
@@ -25,6 +29,7 @@ def stocklistado(request):
     else:
         page = 1
     resultados = paginador.get_page(page)
+    
     return render(request, 'stocks/stock_list.html', {'resultados': resultados})
 
 

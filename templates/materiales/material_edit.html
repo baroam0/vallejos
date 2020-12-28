@@ -6,7 +6,7 @@
         <div class="pure-u-1-3"></div>
         <div class="pure-u-1-3">
             <h3>
-                Busqueda de Marcas Comerciales
+                Detalle Mercaderias
             </h3>
 
 
@@ -30,16 +30,20 @@
                         <span class="pure-form-message-inline">Este dato es requerido.</span>
                     </div>
 
+                    {% if form.codigo_barra %}
 
-                    <div class="pure-control-group">
-                        <label for="aligned-name">Marca Comercial</label>
-                        {{form.marca_comercial}}
-                        <span class="pure-form-message-inline">Este dato es requerido.</span>
-                    </div>
+                        <div class="pure-control-group">
+                            <label for="aligned-name">Codigo de Barra</label>
+                            {{form.codigo_barra}}
+                            <span class="pure-form-message-inline">Este dato es requerido.</span>
+                        </div>
+
+                    {% endif %}
 
                     <div class="pure-control-group">
                         <label for="aligned-name">Precio</label>
                         {{form.precio}}
+                        <span class="pure-form-message-inline">Este dato es requerido.</span>
                     </div>
 
 

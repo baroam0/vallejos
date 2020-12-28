@@ -19,12 +19,13 @@ from django.contrib import admin
 from django.urls import path
 
 from .views import home
+
 from apps.materiales.views import marcacomercialeditar, \
     materialeslistado, materialnuevo, materialeditar, \
-    marcacomerciallistado, marcacomercialnueva
+    marcacomerciallistado, marcacomercialnueva, materialnuevosincodigo
 
-from apps.operaciones.views import operacionlistado
-    
+from apps.operaciones.views import operacionlistado, operacionnueva, \
+    ajaxmaterial, operacioneditar, ajaxguardaroperacion
 
 from apps.stocks.views import stocklistado, stocknuevo, stockeditar
 
@@ -34,17 +35,20 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home),
     path('materialeslistado/', materialeslistado),
+    path('materialnuevosincodigo/', materialnuevosincodigo),
     path('materialnuevo/', materialnuevo),
     path('materialeditar/<int:pk>', materialeditar),
     path('marcacomerciallistado/', marcacomerciallistado),
     path('marcacomercialnueva/', marcacomercialnueva),
     path('marcacomercialeditar/<int:pk>', marcacomercialeditar),
     path('operacionlistado/', operacionlistado),
-    #path('operacionnueva/', operacionnueva),
-    #path('operacioneditar/<int:pk>', operacioneditar),
+    path('operacionnueva/', operacionnueva),
+    path('operacioneditar/<int:pk>', operacioneditar),
     path('stocklistado/', stocklistado),
     path('stocknuevo/', stocknuevo),
     path('stockeditar/<int:pk>', stockeditar),
     path('operacionlistado/', operacionlistado),
+    path('ajaxmaterial/', ajaxmaterial),
+    path('ajaxguardaroperacion/', ajaxguardaroperacion),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
