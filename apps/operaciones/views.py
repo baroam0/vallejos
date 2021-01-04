@@ -1,4 +1,5 @@
 
+import json
 from datetime import datetime
 
 from django.core.paginator import Paginator
@@ -68,12 +69,10 @@ def ajaxmaterial(request):
         return JsonResponse(datos)
 
 
-
 def ajaxguardaroperacion(request):
-    for i in request.GET.get:
-        print("*/////////////")
-        print(i)
-    
+    data = request.POST["datos"]
+    dd = json.dumps(data)
+    print(dd)
 
 
 # Create your views here.

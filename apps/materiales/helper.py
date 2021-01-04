@@ -26,5 +26,5 @@ def gcb():
 
 def generacodigo(cod):
     rv = BytesIO()
-    UPCA(str(cod), writer=ImageWriter()).write(rv)
+    EAN13(str(cod), writer=ImageWriter()).write(rv)
     return rv

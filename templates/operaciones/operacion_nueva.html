@@ -13,7 +13,7 @@
 
             <input type="text" id="txtMaterial" placeholder="Material" onkeypress="BuscaMaterial(event)" >
 
-            <form class="pure-form pure-form-aligned">
+            <form class="pure-form pure-form-aligned">{% csrf_token %}
 
                 <table class="pure-table pure-table-striped" id="tablaOperacion" name="tablaOperacion" >
                     <thead>
@@ -46,11 +46,27 @@
 
         <script>
 
-            var coleccion = [];
+            var coleccion = new Array();
 
             $(document).ready(function () {
                 $("#txtMaterial").focus();
             });
+
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
             
             function IrListadoOperacion() {
                 window.location.replace("/materialeslistado");
@@ -107,12 +123,15 @@
             }
 
             function Guardar(){
-                var fila=[];
+                var coleccionmaterial = "";
+                var coleccioncantidad = "";
+                var fila=new Object();
                 var cantidad = 0;
                 var tabla = document.getElementById('tablaOperacion');
                 var rowLength = tabla.rows.length;
 
                 for(var i=1; i<rowLength; i+=1){
+                    var indice = toString(i);
                     var row = tabla.rows[i];
                     var cellLength = row.cells.length;
                     for(var y=0; y<cellLength; y+=1){
@@ -120,27 +139,52 @@
 
                         if(y==1){
                             cantidad=cell.innerHTML;
-                            
+
                             fila={
-                                "material":row.id,
-                                "cantidad": cantidad
+                                'material':row.id,
+                                'cantidad':cantidad
                             }
                             coleccion.push(fila);
                         }
-                        fila = [];
+
                     }
                 }
 
+                const csrftoken = getCookie('csrftoken');
+
+                console.log(coleccion);
+                
+
                 $.ajax({
-                    type: "GET",
+                    type: 'POST',
                     url: "/ajaxguardaroperacion/",
-                    data: JSON.stringify(coleccion), 
+                    data: {
+                        'datos': JSON.stringify(coleccion),
+                        'csrfmiddlewaretoken':'{{ csrf_token }}'
+                    },
+                    success: function (data, textStatus) {
+                        console.log(data);
+                    },
+                    error: function(xhr, status, e) {
+                        alert(status, e);
+                    }
+                });
+
+
+                /*
+
+                $.ajax({
+                    type: "POST",
+                    url: "/ajaxguardaroperacion/",
+                    headers: {'X-CSRFToken': csrftoken},
+                    data: datos,
                     contentType: "application/json",
                     dataType: "json",
                     success: function (data) {
-                        alert(data);
+                        console.log(data);
                     }
                 });
+                */
 
                 coleccion = [];
             }
