@@ -3,73 +3,96 @@
 {% block content %}
 
     <div class="pure-g">
-        <div class="pure-u-1-5"></div>
-        <div class="pure-u-3-5">
-            <h3>
-                Nueva Operacion
+        <div class="pure-u-1-24"></div>
+        <div class="pure-u-22-24">
+            <h3 align="center">
+                Detalle Orden
             </h3>
 
-            <input type="number" id="txtCantidad" name="txtCantidad" placeholder="Cantidad">
 
-            <input type="text" id="txtMaterial" placeholder="Material" onkeypress="BuscaMaterial(event)" >
-
-            <form class="pure-form pure-form-aligned">{% csrf_token %}
-
-                <table class="pure-table pure-table-striped" id="tablaOperacion" name="tablaOperacion" >
-                    <thead>
-                        <tr>
-                            <th>Descripcion</th>
-                            <th>Cantidad</th>
-                            <th>Precio</th>
-                            <th>SubTotal</th>
-                            <th>Quitar</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-
-
+            <form class="pure-form pure-form-stacked">
                 <fieldset>
-                    <div class="pure-controls">
-                        <button type="button" class="pure-button pure-button-primary" onclick="Guardar()">Aceptar</button>
-                        &nbsp; &nbsp; &nbsp;
-                        <button type="button" class="pure-button" onclick="IrListadoOperacion()">Cancelar</button>
+                    <div class="pure-g">
+                        <div class="pure-u-1 pure-u-md-1-3">
+                            <label for="txtCantidad">Cantidad</label>
+                            <input type="text" id="txtCantidad" class="pure-u-23-24" />
+                        </div>
+                        <div class="pure-u-1 pure-u-md-1-3">
+                            <label for="txtCantidad">Codigo de Barra</label>
+                            <input type="text" id="txtCodigoBarra" class="pure-u-23-24" />
+                        </div>
+                        
                     </div>
-                </fieldset>                
+
+                    <div class="pure-g">
+                        <div class="pure-u-1 pure-u-md-1-3">
+
+                            <table id="tblOperacion" class="pure-table">
+                                <thead>
+                                    <tr>
+                                        <th>Descripcion</th>
+                                        <th>Unidad</th>
+                                        <th>Cantidad</th>
+                                        <th>Precio</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    
+                    <button type="button" class="pure-button pure-button-primary">Aceptar</button>
+                </fieldset>
             </form>
+
+
+           
+  
         </div>
-        <div class="pure-u-1-5"></div>
+        <div class="pure-u-1-3"></div>
     </div>
 
     {% block customjs %}
 
+
         <script>
 
-            var coleccion = new Array();
-
             $(document).ready(function () {
-                $("#txtMaterial").focus();
+                $("#txtFecha").val((new Date()).toLocaleDateString('es-AR'));
             });
 
-            function getCookie(name) {
-                let cookieValue = null;
-                if (document.cookie && document.cookie !== '') {
-                    const cookies = document.cookie.split(';');
-                    for (let i = 0; i < cookies.length; i++) {
-                        const cookie = cookies[i].trim();
-                        // Does this cookie string begin with the name we want?
-                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                            break;
-                        }
-                    }
-                }
-                return cookieValue;
+
+            function getSelectedText(elementId) {
+                var elt = document.getElementById(elementId);
+                if (elt.selectedIndex == -1)
+                    return null;
+                return elt.options[elt.selectedIndex].text;
             }
+
             
-            function IrListadoOperacion() {
-                window.location.replace("/materialeslistado");
+
+            function AgregarFilaTabla(){
+                var material = getSelectedText("selectMaterial");
+                var material_id = $("#selectMaterial").val();
+                var cantidad = $("#txtCantidad").val();
+
+                if(cantidad==""){
+                    cantidad = 1
+                }
+
+                var unidad = getSelectedText("selectUnidad")
+                var id_unidad = $("#selectUnidad").val();
+
+                contenido = "<tr id='" + material_id +  "'>";
+                contenido = contenido + "<td>"+ material +"</td>";
+                contenido = contenido + "<td>" + cantidad + "</td>";
+                contenido = contenido + "<td id='" + id_unidad + "'>" + unidad + "</td>";
+                contenido = contenido + "<td><button type='button' onclick='QuitarFila(" + material_id + ")'>Quitar</button></td>"
+                contenido = contenido + "</tr>";
+                $("#tblMateriales tbody").append(contenido);
+                
             }
 
             function QuitarFila(id){
@@ -77,59 +100,18 @@
                 $("#" + fila.id + "").remove();
             }
 
-            function AgregarFilaTabla(dato){
-                contenido = "<tr id='" + dato.pk +  "'>";
-                contenido = contenido + "<td>"+ dato.descripcion +"</td>";
-                contenido = contenido + "<td>" + dato.cantidad + "</td>";
-                contenido = contenido + "<td>" + dato.precio + "</td>";
-                contenido = contenido + "<td>" + dato.subtotal + "</td>";
-                contenido = contenido + "<td><button type='button' onclick='QuitarFila(" + dato.pk + ")'>Quitar</button></td>"
-                contenido = contenido + "</tr>";
-                $("#tablaOperacion tbody").append(contenido);
-                $("#txtCantidad").val("");
-                $("#txtMaterial").val("");
-            }
+            function GrabarOrden(){
+                var fecha = $("#txtFecha").val();
+                var contratista = $("#selectContratista").val();
+                var encargado = $("#txtEncargado").val();
+                var obra = $("#selectObras").val()
 
-            function BuscaMaterial(e){
-                var cantidad = $("#txtCantidad").val();
-                var codigo = $("#txtMaterial").val();
+                var arraymaterial = [];
+                var arrayunidad = [];
+                var arraycantidad = [];
 
-                if(cantidad == ""){
-                    cantidad = 1
-                }
-
-                if(e.keyCode === 13){
-                    e.preventDefault(); // Ensure it is only this code that runs
-
-                    var data = new Object();
-
-                    $.ajax({
-                        type: "GET",
-                        url: "/ajaxmaterial/",
-                        data: {
-                            "codigo": codigo,
-                            "cantidad": cantidad
-                        }, 
-                        success: function (data) {
-                            if(data.status==200){
-                                AgregarFilaTabla(data);
-                            }else{
-                                alert("No se encuentra la mercaderia solicitada");
-                            }
-                        }
-                    });
-                }
-
-            }
-
-            function Guardar(){
-                var coleccionmaterial = "";
-                var coleccioncantidad = "";
-                var fila=new Object();
-                var cantidad = 0;
-                var tabla = document.getElementById('tablaOperacion');
+                var tabla = document.getElementById('tblMateriales');
                 var rowLength = tabla.rows.length;
-
                 for(var i=1; i<rowLength; i+=1){
                     var indice = toString(i);
                     var row = tabla.rows[i];
@@ -138,57 +120,81 @@
                         var cell = row.cells[y];
 
                         if(y==1){
-                            cantidad=cell.innerHTML;
-
-                            fila={
-                                'material':row.id,
-                                'cantidad':cantidad
-                            }
-                            coleccion.push(fila);
+                            var cantidad=cell.innerHTML;
+                            var idmaterial = row.id;
+                            arraycantidad.push(cantidad);
+                            arraymaterial.push(idmaterial);
                         }
-
+                        if(y==2){
+                            var idunidad=cell.id;
+                            arrayunidad.push(idunidad);
+                        }
                     }
+
                 }
-
-                const csrftoken = getCookie('csrftoken');
-
-                console.log(coleccion);
-                
-
-                $.ajax({
-                    type: 'POST',
-                    url: "/ajaxguardaroperacion/",
-                    data: {
-                        'datos': JSON.stringify(coleccion),
-                        'csrfmiddlewaretoken':'{{ csrf_token }}'
-                    },
-                    success: function (data, textStatus) {
-                        console.log(data);
-                    },
-                    error: function(xhr, status, e) {
-                        alert(status, e);
-                    }
-                });
-
-
-                /*
 
                 $.ajax({
                     type: "POST",
-                    url: "/ajaxguardaroperacion/",
-                    headers: {'X-CSRFToken': csrftoken},
-                    data: datos,
-                    contentType: "application/json",
-                    dataType: "json",
-                    success: function (data) {
-                        console.log(data);
+                    url: "/ajaxgrabarorden/",
+                    data: {
+                        "fecha": fecha,
+                        "contratista": contratista,
+                        "encargado": encargado,
+                        "obra": obra,
+                        "arraymaterial": arraymaterial,
+                        "arrayunidad": arrayunidad,
+                        "arraycantidad": arraycantidad,
+                    },
+                    success: function (response) {
+                        if(response.status==200){
+                            alert("Se ha grabado la orden");
+                            window.location.replace("/listadoorden")
+                        }else{
+                            alert("Ha ocurrido un error");
+                        }
                     }
                 });
-                */
-
-                coleccion = [];
             }
-            
+
+            function ConsultaMaterial(){
+                var codigobarramaterial = $("#txtCodigobarra");
+                var cantidad = $("#txtCantidad");
+
+                if(cantidad == ""){
+                    cantidad = 1;
+                }
+
+                $.getJSON("url", data,
+                    function (data, textStatus, jqXHR) {
+                        
+                    }
+                );
+                
+            }
+
+            function RecorrerTabla(idorden){
+                var tabla = document.getElementById('tblMateriales');
+                var rowLength = tabla.rows.length;
+                for(var i=1; i<rowLength; i+=1){
+                    var indice = toString(i);
+                    var row = tabla.rows[i];
+                    var cellLength = row.cells.length;
+                    for(var y=0; y<cellLength; y+=1){
+                        var cell = row.cells[y];
+
+                        if(y==1){
+                            var cantidad=cell.innerHTML;
+                            var idmaterial = row.id;
+                        }
+                        if(y==2){
+                            var idunidad=cell.id;
+                            console.log(cell);
+                        }
+                    }
+                }
+            }
+
+
         </script>
 
     {% endblock %}

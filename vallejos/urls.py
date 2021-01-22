@@ -24,12 +24,9 @@ from apps.materiales.views import marcacomercialeditar, \
     materialeslistado, materialnuevo, materialeditar, \
     marcacomerciallistado, marcacomercialnueva, materialnuevosincodigo
 
-from apps.operaciones.views import operacionlistado, operacionnueva, \
-    ajaxmaterial, operacioneditar, ajaxguardaroperacion
-
 from apps.stocks.views import stocklistado, stocknuevo, stockeditar
 
-from apps.operaciones.views import operacionlistado
+from apps.operaciones.views import operacioneditar, operacionlistado, operacionnueva
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -47,8 +44,8 @@ urlpatterns = [
     path('stocklistado/', stocklistado),
     path('stocknuevo/', stocknuevo),
     path('stockeditar/<int:pk>', stockeditar),
-    path('operacionlistado/', operacionlistado),
-    path('ajaxmaterial/', ajaxmaterial),
-    path('ajaxguardaroperacion/', ajaxguardaroperacion),
+
+    #path('ajaxmaterial/', ajaxmaterial),
+    #path('ajaxguardaroperacion/', ajaxguardaroperacion),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

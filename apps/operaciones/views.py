@@ -1,78 +1,171 @@
 
-import json
-from datetime import datetime
 
-from django.core.paginator import Paginator
+from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 
 
-from .models import Operacion, DetalleOperacion
-from apps.materiales.models import Material
+from apps.libs.funcionfecha import revertirfecha
 
 
 def operacionlistado(request):
-    if 'txtBuscar' in request.GET:
-        parametro = request.GET.get('txtBuscar')
-        consulta = Operacion.objects.filter(
-            fecha=parametro
-        ).order_by('fecha')
-    else:
-        consulta = Operacion.objects.all().order_by('fecha')
-    paginador = Paginator(consulta, 25)
-    if "page" in request.GET:
-        page = request.GET.get('page')
-    else:
-        page = 1
-    resultados = paginador.get_page(page)
-    return render(request, 'operaciones/operacion_list.html', {'resultados': resultados})
-
-
-def operacionnueva(request):
-    return render(
-        request,
-        "operaciones/operacion_nueva.html"
-    )
-
-
-def operacioneditar(request,pk):
-    resultados = DetalleOperacion.objects.filter(operacion=pk)
+    resultados = None
+    if "txtBuscar" in request.GET:
+        parametro = request.GET.get("txtBuscar")
+        if parametro!="":
+            if parametro.isnumeric():
+                try:
+                    resultados = Orden.objects.get(
+                        pk=int(parametro)
+                    )
+                except:
+                    resultados=None
+            else:
+                resultados = Orden.objects.filter(
+                    Q(obra__descripcion__icontains=parametro) |
+                    Q(contratista__descripcion__icontains=parametro)).order_by("fecha")
+        else:
+            resultados = Orden.objects.all().order_by("fecha")
 
     return render(
         request,
-        "operaciones/operacion_edit.html",
+        "operaciones/operacion_list.html",
         {
             "resultados": resultados
         }
     )
 
 
-def ajaxmaterial(request):
-    codigo = request.GET.get("codigo")
-    cantidad = request.GET.get("cantidad")
-
-    try:
-        material = Material.objects.get(codigo_barra=codigo)
-        subtotal = round(float(material.precio) * float(cantidad),2)
-        datos = {
-            "status": 200,
-            "pk": material.pk,
-            "descripcion": material.descripcion.upper(),
-            "cantidad": cantidad,
-            "precio": material.precio,
-            "subtotal": subtotal
-            }
-
-        return JsonResponse(datos)
-    except Material.DoesNotExist:
-        datos = {"status": 404}
-        return JsonResponse(datos)
+def operacionnueva(request):
+    return render(
+        request,
+        "operaciones/operacion_nueva.html",
+    )
 
 
-def ajaxguardaroperacion(request):
-    data = request.POST["datos"]
-    dd = json.dumps(data)
-    print(dd)
+@csrf_exempt
+def ajaxgrabarorden(request):
+    fecha = request.POST["fecha"]
+    fecha = revertirfecha(fecha)
+    contratista= Contratista.objects.get(pk=int(request.POST["contratista"]))
+    encargado = request.POST["encargado"]
+    obra = Obra.objects.get(pk=int(request.POST["obra"]))
 
+    arraymaterial = request.POST.getlist('arraymaterial[]')
+    arrayunidad = request.POST.getlist('arrayunidad[]')
+    arraycantidad = request.POST.getlist('arraycantidad[]')
+
+    orden=Orden(
+        fecha=fecha,
+        contratista=contratista,
+        encargado=encargado,
+        obra=obra
+    )
+
+    orden.save()
+    orden = Orden.objects.latest("pk")
+
+    for (material, unidad, cantidad) in zip(arraymaterial, arrayunidad, arraycantidad):
+        material = Material.objects.get(pk=int(material))
+        unidad = Unidad.objects.get(pk=int(unidad))
+
+        detalleorden = DetalleOrden(
+            orden=orden,
+            material=material,
+            cantidad=cantidad,
+            unidad=unidad
+        )
+
+        detalleorden.save()
+
+    data = {
+        "status": 200
+    }
+    return JsonResponse(data)
+
+
+def operacioneditar(request, pk):
+    contratistas = Contratista.objects.all()
+    unidades = Unidad.objects.all().order_by("descripcion")
+    obras = Obra.objects.all().order_by("descripcion")
+
+    orden = Orden.objects.get(pk=pk)
+    detallesorden = DetalleOrden.objects.filter(
+        orden=orden
+    )
+
+    return render(
+        request,
+        "ordenes/orden_edit.html",
+        {
+            "orden": orden,
+            "detallesorden": detallesorden,
+            "contratistas": contratistas,
+            "unidades": unidades,
+            "obras": obras
+        }
+    )
+
+
+@csrf_exempt
+def ajaxgrabareditarorden(request,pk):
+    detalleorden=DetalleOrden.objects.filter(orden=pk)
+    detalleorden.delete()
+
+    fecha = request.POST["fecha"]
+    fecha = revertirfecha(fecha)
+    contratista= Contratista.objects.get(pk=int(request.POST["contratista"]))
+    encargado = request.POST["encargado"]
+    obra = Obra.objects.get(pk=int(request.POST["obra"]))
+
+    arraymaterial = request.POST.getlist('arraymaterial[]')
+    arrayunidad = request.POST.getlist('arrayunidad[]')
+    arraycantidad = request.POST.getlist('arraycantidad[]')
+
+    orden = Orden.objects.get(pk=pk)
+
+    orden = Orden.objects.filter(pk=pk).update(
+        fecha=fecha,
+        contratista=contratista,
+        encargado=encargado,
+        obra=obra
+    )
+    obra.save()
+
+    orden = Orden.objects.get(pk=pk)
+
+    for (material, unidad, cantidad) in zip(arraymaterial, arrayunidad, arraycantidad):
+        material = Material.objects.get(pk=int(material))
+        unidad = Unidad.objects.get(pk=int(unidad))
+
+        detalleorden = DetalleOrden(
+            orden=orden,
+            material=material,
+            cantidad=cantidad,
+            unidad=unidad
+        )
+
+        detalleorden.save()
+
+    data = {
+        "status": 200
+    }
+
+    return JsonResponse(data)
+
+
+def imprimirorden(request,pk):
+    orden = Orden.objects.get(pk=pk)
+    detallesorden = DetalleOrden.objects.filter(orden=orden)
+
+    return render(
+        request,
+        "ordenes/imprimirorden.html",
+        {
+            "orden": orden,
+            "detallesorden": detallesorden
+        }
+    )
 
 # Create your views here.
