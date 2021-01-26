@@ -1,12 +1,28 @@
 
 
+from datetime import datetime
 from django.db.models import Q
+from django.core import serializers
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
+from apps.materiales.models import Material
+from apps.operaciones.models import Operacion, DetalleOperacion
 
 from apps.libs.funcionfecha import revertirfecha
+
+
+def ajaxconsultamaterial(request):
+
+    codigobarra = request.GET.get("codigobarra")
+    material = Material.objects.get(codigo_barra=codigobarra)
+    qs = serializers.serialize('json', material)
+    
+    return JsonResponse(qs, safe=False)
+
+    
+
 
 
 def operacionlistado(request):
@@ -45,16 +61,21 @@ def operacionnueva(request):
 
 
 @csrf_exempt
-def ajaxgrabarorden(request):
-    fecha = request.POST["fecha"]
-    fecha = revertirfecha(fecha)
-    contratista= Contratista.objects.get(pk=int(request.POST["contratista"]))
-    encargado = request.POST["encargado"]
-    obra = Obra.objects.get(pk=int(request.POST["obra"]))
+def ajaxgrabaroperacion(request):
+    fecha = datetime.today()
 
+    """
+    operacion = Operacion(fecha)
+    operacion.save()
+    operacion = Operacion.objects.latest('pk')
     arraymaterial = request.POST.getlist('arraymaterial[]')
     arrayunidad = request.POST.getlist('arrayunidad[]')
     arraycantidad = request.POST.getlist('arraycantidad[]')
+    """
+    
+    
+
+    
 
     orden=Orden(
         fecha=fecha,

@@ -26,7 +26,9 @@ from apps.materiales.views import marcacomercialeditar, \
 
 from apps.stocks.views import stocklistado, stocknuevo, stockeditar
 
-from apps.operaciones.views import operacioneditar, operacionlistado, operacionnueva
+from apps.operaciones.views import (ajaxconsultamaterial, operacioneditar,
+    operacionlistado, operacionnueva)
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -44,6 +46,8 @@ urlpatterns = [
     path('stocklistado/', stocklistado),
     path('stocknuevo/', stocknuevo),
     path('stockeditar/<int:pk>', stockeditar),
+
+    path('ajaxconsultamaterial/', ajaxconsultamaterial),
 
     #path('ajaxmaterial/', ajaxmaterial),
     #path('ajaxguardaroperacion/', ajaxguardaroperacion),
