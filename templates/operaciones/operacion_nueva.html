@@ -25,9 +25,6 @@
                             <input type="text" id="txtCantidad" class="pure-u-23-24" />
                         </div>
                         
-                        
-                        
-                        
                     </div>
 
                     <div class="pure-g">
@@ -80,16 +77,30 @@
 
 
             function ConsultaMaterial(codigo){
+                var cantidad = $("#txtCantidad").val();
+
+                if(cantidad==0){
+                    cantidad = 1
+                }
+                
                 data = {
-                    "codigobarra": codigo
+                    "codigobarra": codigo,
+                    "cantidad": cantidad
                 }
                 $.getJSON("/ajaxconsultamaterial", data,
                     function (data, textStatus, jqXHR) {
                         console.log(data);
+                        var contenido = "";
+                        contenido = "<tr id='" + data.materialid +  "'>";
+                        contenido = contenido + "<td>"+ data.material +"</td>";
+                        contenido = contenido + "<td>" + data.cantidad + "</td>";
+                        contenido = contenido + "<td>" + data.unidad + "</td>";
+                        contenido = contenido + "<td><button type='button' onclick='QuitarFila(" + data.materialid + ")'>Quitar</button></td>"
+                        contenido = contenido + "</tr>";
+                        $("#tblOperacion tbody").append(contenido);
                     }
                 );
             }
-
             
             
         </script>

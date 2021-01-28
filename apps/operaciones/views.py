@@ -7,21 +7,29 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
+from apps.complementos_generales.models import Unidad
 from apps.materiales.models import Material
 from apps.operaciones.models import Operacion, DetalleOperacion
+from apps.stocks.models import Stock
 
 from apps.libs.funcionfecha import revertirfecha
 
 
 def ajaxconsultamaterial(request):
-
     codigobarra = request.GET.get("codigobarra")
+    cantidad = request.GET.get("cantidad")
     material = Material.objects.get(codigo_barra=codigobarra)
-    qs = serializers.serialize('json', material)
-    
-    return JsonResponse(qs, safe=False)
+    stock = Stock.objects.get(material=material)
 
-    
+    data ={
+        "materialid": material.pk,
+        "material": material.descripcion,
+        "cantidad": cantidad,
+        "precio": material.precio,
+        "unidad": stock.unidad.descripcion
+    }
+
+    return JsonResponse(data, safe=False)
 
 
 

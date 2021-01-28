@@ -16,6 +16,7 @@ class Stock(models.Model):
 
     class Meta:
         verbose_name_plural = "Stocks"
+        unique_together = ('material','unidad')
 
 
 # Create your models here.
