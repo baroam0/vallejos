@@ -16,21 +16,27 @@ from apps.libs.funcionfecha import revertirfecha
 
 
 def ajaxconsultamaterial(request):
-    codigobarra = request.GET.get("codigobarra")
-    cantidad = request.GET.get("cantidad")
-    material = Material.objects.get(codigo_barra=codigobarra)
-    stock = Stock.objects.get(material=material)
-
-    data ={
-        "materialid": material.pk,
-        "material": material.descripcion,
-        "cantidad": cantidad,
-        "precio": material.precio,
-        "unidad": stock.unidad.descripcion
-    }
+    try:
+        codigobarra = request.GET.get("codigobarra")
+        cantidad = request.GET.get("cantidad")
+        material = Material.objects.get(codigo_barra=codigobarra)
+        stock = Stock.objects.get(material=material)
+        preciosubtotal = float(material.precio) * float(cantidad)
+        data ={
+            "materialid": material.pk,
+            "material": material.descripcion.upper(),
+            "cantidad": cantidad,
+            "precio": material.precio,
+            "unidad": stock.unidad.descripcion,
+            "subtotal": preciosubtotal,
+            "error": 0
+        }
+    except:
+        data = {
+            "error": 1
+        }
 
     return JsonResponse(data, safe=False)
-
 
 
 def operacionlistado(request):
