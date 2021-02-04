@@ -143,12 +143,16 @@
 
             function RecorrerTabla(){
                 var fila = 0;
+                var vector = new Array();
                 $("td").each(function(){
+                    if($(this).text() == "Quitar" ){
+                        
+                    }else{
+                        fila = fila + 1
+                    }
                     console.log($(this).text());
-                    if
+
                 });
-                
-                
             }
 
 
