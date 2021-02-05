@@ -28,8 +28,11 @@
                     </div>
 
                     <div class="pure-g">
-                        <div class="pure-u-1 pure-u-md-1-3">
 
+                        <div class="pure-u-1 pure-u-md-1-3">
+                        </div>
+
+                        <div class="pure-u-1 pure-u-md-1-3">
                             <table id="tblOperacion" class="pure-table">
                                 <thead>
                                     <tr>
@@ -45,6 +48,10 @@
                                 </tbody>
                             </table>
                         </div>
+
+                        <div class="pure-u-1 pure-u-md-1-3">
+                        </div>
+
                     </div>
 
                     <br>
@@ -126,8 +133,8 @@
                             alert("Esa mercaderia no posee stock definido")
                         }else{
                             var contenido = "";
-                            contenido = "<tr id='" + data.materialid +  "'>";
-                            contenido = contenido + "<td>"+ data.material +"</td>";
+                            contenido = "<tr id='mat" + data.materialid  + "'>";
+                            contenido = contenido + "<td id='" + data.materialid + "'>"+ data.material +"</td>";
                             contenido = contenido + "<td>" + data.unidad + "</td>";
                             contenido = contenido + "<td>" + data.cantidad + "</td>";
                             contenido = contenido + "<td>" + parseFloat(data.precio) + "</td>";
@@ -142,23 +149,33 @@
 
 
             function RecorrerTabla(){
-                var fila = 0;
-                var vector = new Array();
-                $("td").each(function(){
-                    if($(this).text() == "Quitar" ){
-                        
-                    }else{
-                        fila = fila + 1
-                    }
-                    console.log($(this).text());
+                var celda = 0;
+                var vectormateriales = new Array();
+                var vectorunidades = new Array();
+                var vectorcantidades = new Array();
 
+                $("td").each(function(){                
+                    if(celda==0){
+                        vectormateriales.push($(this)[0].id);
+                    }
+                    if(celda==1){
+                        vectorunidades.push($(this).text());
+                    }
+                    if(celda==2){
+                        vectorcantidades.push($(this).text());
+                    }
+                    celda = celda + 1;
                 });
+
+                console.log(vectormateriales);
+                //console.log(vectorcantidades);
+                //console.log(vectorunidades);
             }
 
 
             function QuitarFila(id){
                 var fila = document.getElementById(id);
-                $("#" + fila.id + "").remove();
+                $("#mat" + fila.id + "").remove();
             }
 
         </script>
