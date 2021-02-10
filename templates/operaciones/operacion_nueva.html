@@ -88,7 +88,6 @@
     {% endblock %}
 
     {% block customjs %}
-
         <script>
 
             $(document).ready(function () {
@@ -154,7 +153,7 @@
                 var vectorunidades = new Array();
                 var vectorcantidades = new Array();
 
-                $("td").each(function(){                
+                $("td").each(function(){
                     if(celda==0){
                         vectormateriales.push($(this)[0].id);
                     }
@@ -164,12 +163,48 @@
                     if(celda==2){
                         vectorcantidades.push($(this).text());
                     }
+
                     celda = celda + 1;
+
+                    if($(this).text()=="Quitar"){
+                        celda = 0
+                    }
+
                 });
 
+                var mensaje = confirm("Desea registrar la operacion?")
+
+                if(mensaje==true){
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/ajaxgrabaroperacion/",
+                        data: {
+                            "vectormateriales": vectormateriales,
+                            "vectorunidades": vectorcantidades,
+                            "vectorcantidades": vectorcantidades,                            
+                        },
+                        success: function (response) {
+                            if(response.status==200){
+                                alert("Se ha grabado la orden");
+                                window.location.replace("/listadoorden")
+                            }else{
+                                alert("Ha ocurrido un error");
+                            }
+                        }
+                    });
+
+
+                }
+
+
+                
+
+                
+
                 console.log(vectormateriales);
-                //console.log(vectorcantidades);
-                //console.log(vectorunidades);
+                console.log(vectorcantidades);
+                console.log(vectorunidades);
             }
 
 
