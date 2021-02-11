@@ -26,7 +26,7 @@ from apps.materiales.views import marcacomercialeditar, \
 
 from apps.stocks.views import stocklistado, stocknuevo, stockeditar
 
-from apps.operaciones.views import (ajaxconsultamaterial, operacioneditar,
+from apps.operaciones.views import (ajaxconsultamaterial, ajaxgrabaroperacion, operacioneditar,
     operacionlistado, operacionnueva)
 
 
@@ -50,6 +50,6 @@ urlpatterns = [
     path('ajaxconsultamaterial/', ajaxconsultamaterial),
 
     #path('ajaxmaterial/', ajaxmaterial),
-    #path('ajaxguardaroperacion/', ajaxguardaroperacion),
+    path('ajaxgrabaroperacion/', ajaxgrabaroperacion),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

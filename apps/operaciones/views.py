@@ -39,6 +39,7 @@ def ajaxconsultamaterial(request):
     return JsonResponse(data, safe=False)
 
 
+
 def operacionlistado(request):
     resultados = None
     if "txtBuscar" in request.GET:
@@ -78,41 +79,32 @@ def operacionnueva(request):
 def ajaxgrabaroperacion(request):
     fecha = datetime.today()
 
-    """
-    operacion = Operacion(fecha)
-    operacion.save()
-    operacion = Operacion.objects.latest('pk')
-    arraymaterial = request.POST.getlist('arraymaterial[]')
-    arrayunidad = request.POST.getlist('arrayunidad[]')
-    arraycantidad = request.POST.getlist('arraycantidad[]')
-    """
-    
-    
+    vectormateriales=request.POST.getlist('vectormateriales[]')
+    vectorcantidades=request.POST.getlist('vectorcantidades[]')
+    vectorunidades=request.POST.getlist('vectorunidades[]')
+    vectorprecios=request.POST.getlist('vectorprecios[]')
 
-    
+    vectormateriales, vectorcantidades, vectorcantidades
 
-    orden=Orden(
-        fecha=fecha,
-        contratista=contratista,
-        encargado=encargado,
-        obra=obra
+    operacion = Operacion(
+        fecha=fecha
     )
 
-    orden.save()
-    orden = Orden.objects.latest("pk")
+    operacion.save()
+    operacion = Operacion.objects.latest("pk")
 
-    for (material, unidad, cantidad) in zip(arraymaterial, arrayunidad, arraycantidad):
+    for (material, unidad, cantidad, precio) in zip(vectormateriales, vectorunidades, vectorcantidades, vectorprecios):
         material = Material.objects.get(pk=int(material))
-        unidad = Unidad.objects.get(pk=int(unidad))
+        unidad = Unidad.objects.get(descripcion=str(unidad))
 
-        detalleorden = DetalleOrden(
-            orden=orden,
+        detalleoperacion = DetalleOperacion(
+            operacion=operacion,
             material=material,
             cantidad=cantidad,
-            unidad=unidad
+            precio=precio
         )
 
-        detalleorden.save()
+        detalleoperacion.save()
 
     data = {
         "status": 200

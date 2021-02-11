@@ -152,6 +152,7 @@
                 var vectormateriales = new Array();
                 var vectorunidades = new Array();
                 var vectorcantidades = new Array();
+                var vectorprecios = new Array();
 
                 $("td").each(function(){
                     if(celda==0){
@@ -162,6 +163,9 @@
                     }
                     if(celda==2){
                         vectorcantidades.push($(this).text());
+                    }
+                    if(celda==3){
+                        vectorprecios.push($(this).text());
                     }
 
                     celda = celda + 1;
@@ -175,36 +179,25 @@
                 var mensaje = confirm("Desea registrar la operacion?")
 
                 if(mensaje==true){
-
                     $.ajax({
                         type: "POST",
                         url: "/ajaxgrabaroperacion/",
                         data: {
                             "vectormateriales": vectormateriales,
-                            "vectorunidades": vectorcantidades,
-                            "vectorcantidades": vectorcantidades,                            
+                            "vectorunidades": vectorunidades,
+                            "vectorcantidades": vectorcantidades,
+                            "vectorprecios": vectorprecios
                         },
                         success: function (response) {
                             if(response.status==200){
                                 alert("Se ha grabado la orden");
-                                window.location.replace("/listadoorden")
+                                window.location.replace("/operacionlistado")
                             }else{
                                 alert("Ha ocurrido un error");
                             }
                         }
                     });
-
-
                 }
-
-
-                
-
-                
-
-                console.log(vectormateriales);
-                console.log(vectorcantidades);
-                console.log(vectorunidades);
             }
 
 
