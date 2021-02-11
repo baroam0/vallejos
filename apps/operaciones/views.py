@@ -1,7 +1,7 @@
 
 
 from datetime import datetime
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.core import serializers
 from django.http import JsonResponse
 from django.shortcuts import render
@@ -39,7 +39,6 @@ def ajaxconsultamaterial(request):
     return JsonResponse(data, safe=False)
 
 
-
 def operacionlistado(request):
     resultados = None
     if "txtBuscar" in request.GET:
@@ -47,17 +46,17 @@ def operacionlistado(request):
         if parametro!="":
             if parametro.isnumeric():
                 try:
-                    resultados = Orden.objects.get(
+                    resultados = DetalleOperacion.objects.get(
                         pk=int(parametro)
                     )
                 except:
                     resultados=None
             else:
-                resultados = Orden.objects.filter(
+                resultados = DetalleOperacion.objects.filter(
                     Q(obra__descripcion__icontains=parametro) |
                     Q(contratista__descripcion__icontains=parametro)).order_by("fecha")
         else:
-            resultados = Orden.objects.all().order_by("fecha")
+            resultados = Operacion.objects.all().values('').annotate()
 
     return render(
         request,
@@ -95,13 +94,13 @@ def ajaxgrabaroperacion(request):
 
     for (material, unidad, cantidad, precio) in zip(vectormateriales, vectorunidades, vectorcantidades, vectorprecios):
         material = Material.objects.get(pk=int(material))
-        unidad = Unidad.objects.get(descripcion=str(unidad))
 
         detalleoperacion = DetalleOperacion(
             operacion=operacion,
             material=material,
             cantidad=cantidad,
-            precio=precio
+            precio_unitario=precio,
+            precio_subtotal= float(cantidad)*float(precio)
         )
 
         detalleoperacion.save()

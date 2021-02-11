@@ -20,7 +20,8 @@ class DetalleOperacion(models.Model):
         Material, on_delete=models.CASCADE, null=False, blank=False)
     cantidad = models.DecimalField(
         decimal_places=2, max_digits=10, null=False, blank=False)
-    precio = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
+    precio_unitario = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
+    precio_subtotal = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
     
     def subtotal(self):
         resultado = self.cantidad * self.precio
