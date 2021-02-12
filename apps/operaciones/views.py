@@ -56,13 +56,17 @@ def operacionlistado(request):
                     Q(obra__descripcion__icontains=parametro) |
                     Q(contratista__descripcion__icontains=parametro)).order_by("fecha")
         else:
-            resultados = Operacion.objects.all().values('').annotate()
+            resultadosdetalleoperacion = DetalleOperacion.objects.all().values('operacion').annotate(Sum('precio_subtotal'))
+            resultadosoperacion = Operacion.objects.all()
+            print(resultadosdetalleoperacion)
+            print(resultadosoperacion)
 
     return render(
         request,
         "operaciones/operacion_list.html",
         {
-            "resultados": resultados
+            "resultadosoperacion": resultadosoperacion,
+            "resultadodetalleoperacion": resultadosdetalleoperacion
         }
     )
 
