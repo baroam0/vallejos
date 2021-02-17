@@ -58,9 +58,13 @@ def operacionlistado(request):
         else:
             resultadosdetalleoperacion = DetalleOperacion.objects.all().values('operacion').annotate(Sum('precio_subtotal'))
             resultadosoperacion = Operacion.objects.all()
-            print(resultadosdetalleoperacion)
-            print(resultadosoperacion)
+    else:
+        resultadosdetalleoperacion = DetalleOperacion.objects.all().values('operacion').annotate(Sum('precio_subtotal'))
+        resultadosoperacion = Operacion.objects.all()
 
+    #print(resultadosdetalleoperacion)
+    print("---------------------------")
+    print(resultadosoperacion)
     return render(
         request,
         "operaciones/operacion_list.html",

@@ -31,18 +31,22 @@
                     </div>
 
                     {% if form.codigo_barra %}
-
                         <div class="pure-control-group">
                             <label for="aligned-name">Codigo de Barra</label>
                             {{form.codigo_barra}}
                             <span class="pure-form-message-inline">Este dato es requerido.</span>
                         </div>
-
                     {% endif %}
 
                     <div class="pure-control-group">
                         <label for="aligned-name">Precio</label>
                         {{form.precio}}
+                        <span class="pure-form-message-inline">Este dato es requerido.</span>
+                    </div>
+
+                    <div class="pure-control-group">
+                        <label for="aligned-name">Cantidad</label>
+                        {{form.cantidad}}
                         <span class="pure-form-message-inline">Este dato es requerido.</span>
                     </div>
 

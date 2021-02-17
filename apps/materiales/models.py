@@ -10,6 +10,8 @@ class Material(models.Model):
         blank=True, null=True)
     precio = models.DecimalField(decimal_places=2, max_digits=10,
         null=True, blank=True)
+    cantidad = models.DecimalField(decimal_places=2, max_digits=10,
+        null=True, blank=True)
 
     def __str__(self):
         return self.descripcion.upper()

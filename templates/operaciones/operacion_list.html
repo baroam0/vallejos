@@ -42,18 +42,23 @@
 
                 </thead>
                 <tbody>
-                    
+
+                    {% for detalle in resultadosdetalleoperacion %}
+                        {{detalle.operacion}}
+                        {{detalle.precio_subtotal__sum}}
+                        {{detalle.pk}}
+                    {% endfor %}
+
+                    {{ resultadosdetalleoperacion }}
+
+                    {{ resultadosoperacion }}
+        
                     {% for resultado in resultadosoperacion %}
                         <tr>
                             <td>{{resultado.fecha }}</td>
-                            {% if resultadosdetalleoperacion %}
-                                {% for detalle in resultadodetalleoperacion%}
-                                    {% if detalleoperacion == resultado.pk %}
-                                        <td></td>
-                                    {% endif%}
-                                {% endfor %}
-                            {% endif %}
+
                             
+
                             <td>
                                 <a href="/stockeditar/{{resultado.pk}} ">Editar</a></p>
                             </td>
